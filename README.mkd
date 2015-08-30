@@ -1,0 +1,40 @@
+oasiz_lingr_datasource
+======================
+
+Lingr のメッセージを提供するデータソースです。
+
+
+Usage:
+------
+
+プラグインを導入すると、データソースに Lingr を追加します。
+
+設定画面でメッセージを取得する room を指定してください。
+
+
+Install:
+--------
+
+以下のコマンドをターミナルで実行し、 mikutter を再起動してください。
+
+~~~ { .sh }
+$ mkdir -p ~/.mikutter/plugin
+$ cd ~/.mikutter/plugin
+$ git clone git://github.com/mikoto2000/mikutter_oasiz_datasource_lingr.git oasiz_datasource_lingr
+~~~
+
+
+License:
+--------
+
+Copyright (C) 2015 mikoto2000
+
+This software is released under the MIT License, see LICENSE
+
+このソフトウェアは MIT ライセンスの下で公開されています。 LICENSE を参照してください。
+
+
+Author:
+-------
+
+mikoto2000 <mikoto2000@gmail.com>

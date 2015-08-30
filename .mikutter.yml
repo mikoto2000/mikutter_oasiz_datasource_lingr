@@ -1,0 +1,9 @@
+---
+slug: :oasiz_datasource_lingr
+depends:
+  mikutter: 3.2.5
+  plugin: []
+version: '1.0'
+author: mikoto2000
+name: OASIZ datasource Lingr
+description: Lingr のメッセージを流すデータソースを提供します。
