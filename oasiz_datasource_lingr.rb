@@ -68,7 +68,7 @@ Plugin.create(:oasiz_datasource_lingr) do
       mikutter_messages = messages.sort_by { |item| item['timestamp'] }
           .map { |item|
               # mikutter ユーザー情報作成
-              user = User.new(:id => -5939, :idname => item['speaker_id'])
+              user = User.new(:id => -5939, :idname => item['room'])
               user[:name] = item['nickname']
               user[:profile_image_url] = item['icon_url']
 
