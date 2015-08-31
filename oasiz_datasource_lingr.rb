@@ -37,6 +37,7 @@ Plugin.create(:oasiz_datasource_lingr) do
       end
 
       rooms = UserConfig[:oasiz_datasource_lingr_rooms]
+      rooms = [] unless rooms
       for room in rooms
           @last_message_times[room] = '0000-00-00T00:00:00Z'
       end
@@ -56,6 +57,7 @@ Plugin.create(:oasiz_datasource_lingr) do
 
       # 設定された Room 一覧を取得し、全 Room のメッセージを取得
       rooms = UserConfig[:oasiz_datasource_lingr_rooms]
+      rooms = [] unless rooms
       for room in rooms
         @last_message_times[room] = '0000-00-00T00:00:00Z' unless @last_message_times[room]
         room_messages = @lingr.get_messages(room, @last_message_times[room])
