@@ -101,7 +101,11 @@ class Lingr
         @username = username
         @password = password
         @app_key = app_key
-        @session = create_session(username, password, app_key)
+        begin
+          @session = create_session(username, password, app_key)
+        rescue => e
+          Plugin.activity :error, e
+        end
     end
 
     # セッションを破棄する
@@ -112,8 +116,11 @@ class Lingr
     # メッセージを取得する
     # TODO: 文字列じゃなくて日付型もらいたいよね
     def get_messages(rooms, start_time = '0000-00-00T00:00:00Z')
-        verify_session
-
+        begin
+          verify_session
+        rescue => e
+          Plugin.activity :error, e
+        end
 
         response = Net::HTTP.post_form(
             URI.parse(ENDPOINT_URL + 'room/show'), {'session'=>@session, 'rooms'=>rooms})
