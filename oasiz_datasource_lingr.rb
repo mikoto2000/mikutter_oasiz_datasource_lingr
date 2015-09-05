@@ -53,39 +53,41 @@ Plugin.create(:oasiz_datasource_lingr) do
   # Lingr からメッセージを取得する
   on_period { |service|
     if service == Service.primary
-      messages = []
+      Thread.new {
+        messages = []
 
-      # 設定された Room 一覧を取得し、全 Room のメッセージを取得
-      rooms = UserConfig[:oasiz_datasource_lingr_rooms]
-      rooms = [] unless rooms
-      for room in rooms
-        @last_message_times[room] = '0000-00-00T00:00:00Z' unless @last_message_times[room]
-        room_messages = @lingr.get_messages(room, @last_message_times[room])
-        messages.concat(room_messages)
-        @last_message_times[room] = room_messages.last['timestamp'] if room_messages.last
-      end
+        # 設定された Room 一覧を取得し、全 Room のメッセージを取得
+        rooms = UserConfig[:oasiz_datasource_lingr_rooms]
+        rooms = [] unless rooms
+        for room in rooms
+          @last_message_times[room] = '0000-00-00T00:00:00Z' unless @last_message_times[room]
+          room_messages = @lingr.get_messages(room, @last_message_times[room])
+          messages.concat(room_messages)
+          @last_message_times[room] = room_messages.last['timestamp'] if room_messages.last
+        end
 
-      # timestamp 順にソート
-      # mikutter の Message に変換
-      mikutter_messages = messages.sort_by { |item| item['timestamp'] }
-          .map { |item|
-              # mikutter ユーザー情報作成
-              user = User.new(:id => -5939, :idname => item['room'])
-              user[:name] = item['nickname']
-              user[:profile_image_url] = item['icon_url']
+        # timestamp 順にソート
+        # mikutter の Message に変換
+        mikutter_messages = messages.sort_by { |item| item['timestamp'] }
+            .map { |item|
+                # mikutter ユーザー情報作成
+                user = User.new(:id => -5939, :idname => item['room'])
+                user[:name] = item['nickname']
+                user[:profile_image_url] = item['icon_url']
 
-              # mikutter メッセージ情報作成
-              message = Message.new(
-                  :message => item['text'],
-                  :system => true)
-              time = Time.parse(item['timestamp'])
-              message[:created] = time
-              message[:modified] = time
-              message[:user] = user
-              message
-          }
+                # mikutter メッセージ情報作成
+                message = Message.new(
+                    :message => item['text'],
+                    :system => true)
+                time = Time.parse(item['timestamp'])
+                message[:created] = time
+                message[:modified] = time
+                message[:user] = user
+                message
+            }
 
-      Plugin.call(:extract_receive_message, :oasiz_datasource_lingr, mikutter_messages)
+        Plugin.call(:extract_receive_message, :oasiz_datasource_lingr, mikutter_messages)
+      }
     end
   }
 end
